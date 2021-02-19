@@ -36,6 +36,7 @@ int PackWaveFile(cd::IsoWriter* writer, const char* wavFile);
 int GetSize(const char* fileName);
 
 int compare( const char* a, const char* b );
+const char *getFileNameFromPath(const char *path);
 
 
 int main(int argc, const char* argv[])
@@ -300,8 +301,8 @@ int main(int argc, const char* argv[])
 					return EXIT_FAILURE;
 				}
 
-				fprintf( cuefp, "FILE \"%s\" BINARY\n",
-					global::ImageName.c_str() );
+		                fprintf( cuefp, "FILE \"%s\" BINARY\n",
+					getFileNameFromPath(global::ImageName.c_str()) );
 			}
 		}
 
@@ -1338,3 +1339,17 @@ int compare( const char* a, const char* b )
 
 	return 0;
 }
+
+const char *getFileNameFromPath(const char *path)
+{
+    for (size_t i = strlen(path) - 1; i; i--)
+    {
+        if (path[i] == '\\')
+        {
+            return &path[i + 1];
+        }
+    }
+
+    return path;
+}
+
