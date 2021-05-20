@@ -2,10 +2,11 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <string.h>
-#include <tinyxml2.h>
+#include "tinyxml2.h"
 
 
-#define VERSION "0.40"
+#define VERSION "0.40.210426"
+#define MAX_PATH PATH_MAX
 
 
 int ParseDir(tinyxml2::XMLElement *dirElement, tinyxml2::XMLDocument *xmldoc) {
@@ -137,11 +138,21 @@ int main(int argc, const char* argv[]) {
 	tinyxml2::XMLDocument xmldoc;
 
     tinyxml2::XMLElement *baseElement = xmldoc.NewElement("iso_project");
-
+	baseElement->SetAttribute("image_name", "mkpsxiso.bin");
+	baseElement->SetAttribute("cue_sheet", "mkpsxiso.cue");
 
     tinyxml2::XMLElement *trackElement = xmldoc.NewElement("track");
-
     trackElement->SetAttribute("type", "data");
+	
+	tinyxml2::XMLElement *newElement = xmldoc.NewElement("identifiers");
+	newElement->SetAttribute("system", "PLAYSTATION");
+	newElement->SetAttribute("application", "PLAYSTATION");
+	newElement->SetAttribute("volume", "");
+	newElement->SetAttribute("volume_set", "");
+	newElement->SetAttribute("publisher", "");
+	newElement->SetAttribute("data_preparer", "");
+    newElement->SetAttribute("copyright", "");	
+	trackElement->InsertEndChild(newElement);
 
     tinyxml2::XMLElement *dirTreeElement = xmldoc.NewElement("directory_tree");
 
