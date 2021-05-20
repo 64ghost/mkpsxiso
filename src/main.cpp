@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include <tinyxml2.h>
+#include "tinyxml2.h"
 #include <unistd.h>
 #include <string>
 #include "cdwriter.h"	// CD image writer module
 #include "iso.h"		// ISO file system generator module
 
-#define VERSION "1.26"
+#define VERSION "1.26.210520"
 
 
 namespace global
@@ -300,9 +300,8 @@ int main(int argc, const char* argv[])
 
 					return EXIT_FAILURE;
 				}
-
-		                fprintf( cuefp, "FILE \"%s\" BINARY\n",
-					getFileNameFromPath(global::ImageName.c_str()) );
+				fprintf( cuefp, "FILE \"%s\" BINARY\n",
+					getFileNameFromPath(global::ImageName.c_str()) );	
 			}
 		}
 
@@ -478,32 +477,6 @@ int main(int argc, const char* argv[])
 					if ( !global::NoIsoGen )
 					{
 						int trackLBA = writer.SeekToEnd();
-
-						// Add PREGAP of 2 seconds on first audio track only
-						if ( ( !firstCDDAdone ) && ( global::trackNum < 3 ) )
-						{
-
-							fprintf( cuefp, "    PREGAP 00:02:00\n" );
-							firstCDDAdone = true;
-
-						} else {
-
-							fprintf( cuefp, "    INDEX 00 %02d:%02d:%02d\n",
-								(trackLBA/75)/60, (trackLBA/75)%60,
-								trackLBA%75 );
-
-							char blank[CD_SECTOR_SIZE];
-							memset( blank, 0x00, CD_SECTOR_SIZE );
-
-							for ( int sp=0; sp<150; sp++ )
-							{
-								writer.WriteBytesRaw( blank, CD_SECTOR_SIZE );
-							}
-
-							trackLBA += 150;
-
-						}
-
 						fprintf( cuefp, "    INDEX 01 %02d:%02d:%02d\n",
 							(trackLBA/75)/60, (trackLBA/75)%60, trackLBA%75 );
 
@@ -637,20 +610,20 @@ int ParseISOfileSystem(cd::IsoWriter* writer, FILE* cue_fp, tinyxml2::XMLElement
 				printf( "      Volume       : %s\n",
 					identifierElement->Attribute( "volume" ) );
 			}
-			if ( identifierElement->Attribute( "volumeset" ) != nullptr )
+			if ( identifierElement->Attribute( "volume_set" ) != nullptr )
 			{
 				printf( "      Volume Set   : %s\n",
-					identifierElement->Attribute( "volumeset" ) );
+					identifierElement->Attribute( "volume_set" ) );
 			}
 			if ( identifierElement->Attribute( "publisher" ) != nullptr )
 			{
 				printf( "      Publisher    : %s\n",
 					identifierElement->Attribute( "publisher" ) );
 			}
-			if ( identifierElement->Attribute( "datapreparer" ) != nullptr )
+			if ( identifierElement->Attribute( "data_preparer" ) != nullptr )
 			{
 				printf( "      Data Preparer: %s\n",
-					identifierElement->Attribute( "datapreparer" ) );
+					identifierElement->Attribute( "data_preparer" ) );
 			}
 			if ( identifierElement->Attribute( "copyright" ) != nullptr )
 			{
@@ -880,10 +853,10 @@ int ParseISOfileSystem(cd::IsoWriter* writer, FILE* cue_fp, tinyxml2::XMLElement
 	{
 		isoIdentifiers.SystemID		= identifierElement->Attribute( "system" );
 		isoIdentifiers.VolumeID		= identifierElement->Attribute( "volume" );
-		isoIdentifiers.VolumeSet	= identifierElement->Attribute( "volumeset" );
+		isoIdentifiers.VolumeSet	= identifierElement->Attribute( "volume_set" );
 		isoIdentifiers.Publisher	= identifierElement->Attribute( "publisher" );
 		isoIdentifiers.Application	= identifierElement->Attribute( "application" );
-		isoIdentifiers.DataPreparer	= identifierElement->Attribute( "datapreparer" );
+		isoIdentifiers.DataPreparer	= identifierElement->Attribute( "data_preparer" );
 		isoIdentifiers.Copyright	= identifierElement->Attribute( "copyright" );
 
 		if ( isoIdentifiers.SystemID == nullptr )
@@ -898,7 +871,7 @@ int ParseISOfileSystem(cd::IsoWriter* writer, FILE* cue_fp, tinyxml2::XMLElement
 
 		if ( isoIdentifiers.Copyright == nullptr )
 		{
-			isoIdentifiers.Copyright = "COPYLEFTED";
+			isoIdentifiers.Copyright = " ";
 		}
 	}
 
@@ -1352,4 +1325,3 @@ const char *getFileNameFromPath(const char *path)
 
     return path;
 }
-
