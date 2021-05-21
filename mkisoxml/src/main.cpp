@@ -137,13 +137,11 @@ int main(int argc, const char* argv[]) {
 
 	tinyxml2::XMLDocument xmldoc;
 
-    tinyxml2::XMLElement *baseElement = xmldoc.NewElement("iso_project");
-	
+    tinyxml2::XMLElement *baseElement = xmldoc.NewElement("iso_project");	
 	baseElement->SetAttribute("image_name", "mkpsxiso.bin");
 	baseElement->SetAttribute("cue_sheet", "mkpsxiso.cue");
 
-    tinyxml2::XMLElement *trackElement = xmldoc.NewElement("track");
-	
+    tinyxml2::XMLElement *trackElement = xmldoc.NewElement("track");	
     trackElement->SetAttribute("type", "data");
 	
 	tinyxml2::XMLElement *newElement = xmldoc.NewElement("identifiers");
