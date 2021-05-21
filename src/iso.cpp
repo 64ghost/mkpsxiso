@@ -948,7 +948,7 @@ int iso::DirTreeClass::WriteFiles(cd::IsoWriter* writer)
 		}
 		else
 		{
-			writer->SeekToSector( entries[i].lba);
+			writer->SeekToSector( entries[i].lba );
 		}
 
 		// Write files and dummies as regular data sectors
