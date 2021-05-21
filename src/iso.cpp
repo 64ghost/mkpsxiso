@@ -1023,14 +1023,13 @@ int iso::DirTreeClass::WriteFiles(cd::IsoWriter* writer)
 			while( !feof( fp ) )
 			{
 				fread( buff, 1, 2336, fp );
+				writer->WriteBytesXA(buff, 2336, cd::IsoWriter::EdcEccForm2);
+				
 				fgetc (fp);
-
 				if ( feof( fp ) )
 				{
-					writer->WriteBytesXA(buff, 2336, cd::IsoWriter::EdcEccForm2);
 					break;
 				}
-				writer->WriteBytesXA(buff, 2336, cd::IsoWriter::EdcEccForm2);
 				fseek( fp,-1,1);
 			}
 
@@ -1059,22 +1058,6 @@ int iso::DirTreeClass::WriteFiles(cd::IsoWriter* writer)
 			{
 				memset( buff, 0x00, 2336 );
 				fread( buff, 1, 2336, fp );
-				fgetc (fp);
-
-				if ( feof( fp ) )
-				{
-					if ( buff[2]&0x20 )
-					{
-						// If so, write it as an XA sector
-						writer->WriteBytesXA( buff, 2336, cd::IsoWriter::EdcEccForm2 );
-					}
-					else
-					{
-						// Otherwise, write it as Mode 2 Form 1
-						writer->WriteBytesXA( buff, 2336, cd::IsoWriter::EdcEccForm1 );
-					}
-						break;
-				}
 
 				// Check submode if sector is mode 2 form 2
 				if ( buff[2]&0x20 )
@@ -1087,6 +1070,12 @@ int iso::DirTreeClass::WriteFiles(cd::IsoWriter* writer)
 				{
 					// Otherwise, write it as Mode 2 Form 1
 					writer->WriteBytesXA( buff, 2336, cd::IsoWriter::EdcEccForm1 );
+				}
+				
+				fgetc (fp);
+				if ( feof( fp ) )
+				{
+					break;
 				}
 				fseek( fp,-1,1);
 			}
@@ -1119,14 +1108,13 @@ int iso::DirTreeClass::WriteFiles(cd::IsoWriter* writer)
 				{
 					memset( buff, 0x00, 2048 );
 					fread( buff, 1, 2048, fp );
+					writer->WriteBytes( buff, 2048, cd::IsoWriter::EdcEccForm1 );
+					
 					fgetc (fp);
-
 					if ( feof( fp ) )
 					{
-						writer->WriteBytes( buff, 2048, cd::IsoWriter::EdcEccForm1 );
 						break;
 					}
-					writer->WriteBytes( buff, 2048, cd::IsoWriter::EdcEccForm1 );
 					fseek( fp,-1,1);
 				}
 
