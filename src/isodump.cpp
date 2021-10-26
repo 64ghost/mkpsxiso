@@ -60,7 +60,7 @@ void PrintDate(char* text) {
 
 void BackDir(std::string& path) {
 
-    path.resize(path.rfind("/"));
+    path.resize(path.rfind("\\"));
 
 }
 
@@ -143,7 +143,7 @@ void ParseDirectories(cd::IsoReader& reader, int offs, tinyxml2::XMLDocument* do
 
         if (dirEntries.dirEntryList[e].flags & 0x2) {
 
-            global::isoPath += "/";
+            global::isoPath += "\\";
             global::isoPath += dirEntries.dirEntryList[e].identifier;
 
             if (element != NULL) {
