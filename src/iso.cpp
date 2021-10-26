@@ -1025,12 +1025,6 @@ int iso::DirTreeClass::WriteFiles(cd::IsoWriter* writer)
 				fread( buff, 1, 2336, fp );
 				writer->WriteBytesXA(buff, 2336, cd::IsoWriter::EdcEccForm2);
 				
-				fgetc (fp);
-				if ( feof( fp ) )
-				{
-					break;
-				}
-				fseek( fp,-1,1);
 			}
 
 			fclose( fp );
@@ -1072,12 +1066,6 @@ int iso::DirTreeClass::WriteFiles(cd::IsoWriter* writer)
 					writer->WriteBytesXA( buff, 2336, cd::IsoWriter::EdcEccForm1 );
 				}
 				
-				fgetc (fp);
-				if ( feof( fp ) )
-				{
-					break;
-				}
-				fseek( fp,-1,1);
 			}
 
 			fclose( fp );
